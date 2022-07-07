@@ -6,13 +6,25 @@ export async function loginController(req,res,next){
     if(employee){
         if(employee.password === req.body.password){
             req.session.employee = employee._id
-            res.json("logged in")
+            res.json({
+                message:"logged in",
+                status:200,
+                data:""
+            })
         }
         else{
-            res.json("wrong password, sus")
+            res.json({
+                message:"wrong password",
+                status:403,
+                data:""
+            })
         }
     }
     else{
-        res.json("user exists not")
+        res.json({
+            message:"User does not exist",
+            status:404,
+            data:""
+        })
     }
 }

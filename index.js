@@ -5,11 +5,13 @@ import models from './models.js'
 import session from 'express-session'
 import cors from 'cors'
 import { default as connectMongoDBSession} from 'connect-mongodb-session';
-import { createOrder,fulfilOrder, createAcquisition, completeAcquisition,cancelAcquisition, logInspection, cancelOrder } from './transactions.js'
+//import { createOrder, createAcquisition, completeAcquisition,cancelAcquisition, logInspection, cancelOrder } from './transactions.js'
 
 //import routers
 import loginRouter from './routes/login.js'
 import checkLoginRouter from './routes/checkLogin.js'
+import ordersRouter from './routes/orders.js'
+import productsRouter from './routes/products.js'
 
 const app = express()
 
@@ -27,6 +29,10 @@ models.Employee.find({}).then((data) =>{
         populateMockData()
     }
 })
+
+// createOrder({fn:"Richard",ln:"Nzioki"},[{name:"sponge",quantity:50},{name:"camphor",quantity:20}]).then(()=>{
+//     console.log("order made")
+// })
 
 //session store configuration
 const MongoDBStore = connectMongoDBSession(session);
@@ -58,6 +64,8 @@ app.use(express.urlencoded({extended:false}))
 app.use(session(sessionConfig))
 app.use('/login', loginRouter)
 app.use('/checklogin',checkLoginRouter)
+app.use('/orders',ordersRouter)
+app.use('/products',productsRouter)
 app.listen(PORT,()=>{
     console.log(`app is listening on port ${PORT}`)
 })
