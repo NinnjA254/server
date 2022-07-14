@@ -29,8 +29,14 @@ const orderSchema = new mongoose.Schema({
             ref:'Product',
             required:true
         },
-        quantitySold:{type:Number,required:true} //number of items of productId type that were sold
-    }], 
+        quantitySold:{type:Number,required:true}, //number of items of productId type that were sold
+        cost:{
+            type:Number,
+            required:true,
+        } //cost of the productId type sold
+
+    }],
+    totalCost:{type:Number,required:true}, //total cost of the order 
     orderStatus: {type:Boolean,required: true},
 })
 const Order = mongoose.model('Order',orderSchema)

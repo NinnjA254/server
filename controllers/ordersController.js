@@ -30,6 +30,7 @@ export async function createOrder(req,res){
 
     const productArray = []
     const outOfStock = []
+    let totalCost = 0
     const customer = await models.Customer.findOne({firstName:customerInfo.firstName,lastName:customerInfo.lastName})
 
     for (let info of productInfo){
@@ -47,8 +48,10 @@ export async function createOrder(req,res){
         if(product && product.quantity >= info.quantity){
             productArray.push({
                 productId:product._id.toString(),
-                quantitySold:info.quantity
+                quantitySold:info.quantity,
+                cost:product.prize*info.quantity
             })
+            totalCost += product.prize*info.quantity
         }
         
     }
@@ -67,12 +70,13 @@ export async function createOrder(req,res){
             time:Date.now(),
             customerId:customer._id.toString(),
             itemsSold:productArray,
-            orderStatus:false
+            orderStatus:false,
+            totalCost:totalCost
         })
         await order.save().catch(err => console.log(err))
         console.log("order success with existing user")
         return res.json({
-            message:"order successifully created with an existing user",
+            message:"order successfully created with an existing user",
             status:200,
             data:null
         })
@@ -88,7 +92,8 @@ export async function createOrder(req,res){
             time:Date.now(),
             customerId:newCust._id.toString(),
             itemsSold:productArray,
-            orderStatus:false
+            orderStatus:false,
+            totalCost:totalCost
         })
         await order.save().catch(err => console.log(err))
         console.log("order success, created new customer!")
